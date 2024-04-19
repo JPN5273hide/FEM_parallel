@@ -1,1 +1,3 @@
-2DFEM/.vscode
+2DFEM/.vscode/
+2DFEM_mp/.vscode/
+*.o
