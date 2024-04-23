@@ -64,7 +64,8 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
     double* Adir;
     Adir = (double*)malloc(sizeof(double)*dim);
-
+    #pragma acc data create(Adir[0:dim])
+    {
     while  (step <= dim){
         /*出力*/
         /*
@@ -73,8 +74,11 @@ int normal_CG(int dim, double *x, double **A, double *b){
         }
         */
 
+        #pragma acc kernels
+        #pragma acc loop independent
         for (i=0; i<dim; i++){
             Adir[i] = 0;
+            #pragma acc loop independent
             for (j=0; j<dim; j++){
                 Adir[i] = Adir[i] + A[i][j]*dir[j];
             }
@@ -82,27 +86,22 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
         /*近似解の更新*/
         rz = 0, pAp = 0;
-        #pragma omp parallel for reduction(+:pAp)
         for (i=0; i<dim; i++){
             pAp = pAp +  dir[i]*Adir[i];
         }
-        #pragma omp parallel for reduction(+:rz)
         for (i=0; i<dim; i++){
             rz = rz + resid[i]*resid[i];
         }
         alpha = rz/pAp;
-        #pragma omp parallel for
         for (i=0; i<dim; i++){
             x[i] = x[i] + alpha*dir[i];
         }
         
         /*残差ベクトルとそのL2ノルムの更新*/
-        #pragma omp parallel for
         for (i=0; i<dim; i++){
                 resid[i] = resid[i] - alpha*Adir[i];
         }
         sum = 0;
-        #pragma omp parallel for reduction(+:sum)
         for (int i=0; i<dim; i++){
             sum = sum + resid[i]*resid[i];
         }
@@ -110,12 +109,10 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
         /*探索方向の更新*/
         rz_next = 0;
-        #pragma omp parallel for reduction(+:rz_next)
         for (i=0; i<dim; i++){
             rz_next = rz_next + resid[i]*resid[i];
         }
         beta = rz_next/rz;
-        #pragma omp parallel for
         for (i=0; i<dim; i++){
             dir[i] = resid[i] + beta*dir[i];
         }
@@ -137,6 +134,7 @@ int normal_CG(int dim, double *x, double **A, double *b){
     free(Adir);
     free(resid);
     free(dir);
+    }
 }
 
 int diagscaled_CG(int dim, double *x, double **A, double *b){
@@ -201,27 +199,22 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
 
         /*近似解の更新*/
         rz = 0, pAp = 0;
-        #pragma acc loop rediction(+:pAp)
         for (i=0; i<dim; i++){
             pAp = pAp +  dir[i]*Adir[i];
         }
-        #pragma acc loop reduction(+:rz)
         for (i=0; i<dim; i++){
             rz = rz + resid[i]*resid[i];
         }
         alpha = rz/pAp;
-        #pragma omp parallel for
         for (i=0; i<dim; i++){
             x[i] = x[i] + alpha*dir[i];
         }
         
         /*残差ベクトルとそのL2ノルムの更新*/
-        #pragma omp parallel for
         for (i=0; i<dim; i++){
                 resid[i] = resid[i] - alpha*Adir[i];
         }
         sum = 0;
-        #pragma omp parallel for reduction(+:sum)
         for (int i=0; i<dim; i++){
             sum = sum + resid[i]*resid[i];
         }
@@ -229,12 +222,10 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
 
         /*探索方向の更新*/
         rz_next = 0;
-        #pragma omp parallel for reduction(+:rz_next)
         for (i=0; i<dim; i++){
             rz_next = rz_next + resid[i]*resid[i];
         }
         beta = rz_next/rz;
-        #pragma omp parallel for
         for (i=0; i<dim; i++){
             dir[i] = resid[i] + beta*dir[i];
         }
