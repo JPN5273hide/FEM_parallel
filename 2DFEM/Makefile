@@ -1,5 +1,5 @@
 CC = gcc
-CFLAG = -Ofast -fopenmp
+CFLAG = -fopenmp
 
 inputdata.o: inputdata.c
 	$(CC) -o inputdata.o -c inputdata.c

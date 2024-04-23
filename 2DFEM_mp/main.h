@@ -1,7 +1,7 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#define L 100 // 一辺の分割個数 ここを入力！！
+#define L 50 // 一辺の分割個数 ここを入力！！
 #define NUMOFELEMS L*L*2 // 有限要素の数
 #define NUMOFNODES (L+1)*(L+1) // 節点の数
 #define N L*4 /*境界節点の数*/
@@ -16,5 +16,6 @@ int construct_matrix(double **A, double *f, int **cnn, double *node_coord_x, dou
 
 int Gauss_elimination(int dim, double *x, double **A, double *b);
 int normal_CG(int dim, double *x, double **A, double *b);
+int diagscaled_CG(int dim, double *x, double **A, double *b);
 
 #endif // _MAIN_H_

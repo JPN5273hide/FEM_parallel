@@ -138,9 +138,10 @@ int normal_CG(int dim, double *x, double **A, double *b){
     free(dir);
 }
 
-int normal_CG(int dim, double *x, double **A, double *b){
+int diagscaled_CG(int dim, double *x, double **A, double *b){
     /*共役勾配法によりAx=b（次元：dim）を解き、解をxに格納する*/
     /*次元ステップだけ反復する（Aが正定値対称行列なら収束する）*/
+
     int i, j;
 
     /*対角スケーリングによる前処理*/
