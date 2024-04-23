@@ -62,6 +62,9 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
     t1 = omp_get_wtime();
 
+    double* Adir;
+    Adir = (double*)malloc(sizeof(double)*dim);
+
     while  (step <= dim){
         /*出力*/
         /*
@@ -70,8 +73,6 @@ int normal_CG(int dim, double *x, double **A, double *b){
         }
         */
 
-        double* Adir;
-        Adir = (double*)malloc(sizeof(double)*dim);
         for (i=0; i<dim; i++){
             Adir[i] = 0;
             for (j=0; j<dim; j++){
@@ -121,8 +122,6 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
         /*ステップ数の更新*/
         step++ ;
-
-        free(Adir);
     }
 
     t2 = omp_get_wtime();
@@ -130,11 +129,12 @@ int normal_CG(int dim, double *x, double **A, double *b){
     int omp_max_threads = omp_get_max_threads();
 
     printf("solver: CG (not preconditionedcd)\n");
-    printf("using openMP\n");
+    printf("not parallized\n");
     printf("CG time = %lf [sec.] \n",t2-t1);
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);
 
+    free(Adir);
     free(resid);
     free(dir);
 }
@@ -181,6 +181,9 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
 
     t1 = omp_get_wtime();
 
+    double* Adir;
+    Adir = (double*)malloc(sizeof(double)*dim);
+
     while  (step <= dim){
         /*出力*/
         /*
@@ -189,8 +192,6 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
         }
         */
 
-        double* Adir;
-        Adir = (double*)malloc(sizeof(double)*dim);
         for (i=0; i<dim; i++){
             Adir[i] = 0;
             for (j=0; j<dim; j++){
@@ -249,7 +250,7 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
     int omp_max_threads = omp_get_max_threads();
 
     printf("solver: CG (diagonal scaled)\n");
-    printf("using openMP\n");
+    printf("not parallized\n");
     printf("CG time = %lf [sec.] \n",t2-t1);
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);
