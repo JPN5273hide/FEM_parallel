@@ -75,10 +75,10 @@ int normal_CG(int dim, double *x, double **A, double *b){
         */
 
         #pragma acc kernels
-        #pragma acc loop independent
+        #pragma acc loop gang
         for (i=0; i<dim; i++){
             Adir[i] = 0;
-            #pragma acc loop independent
+            #pragma acc loop vector
             for (j=0; j<dim; j++){
                 Adir[i] = Adir[i] + A[i][j]*dir[j];
             }
