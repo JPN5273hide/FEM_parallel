@@ -241,8 +241,6 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
 
         /*ステップ数の更新*/
         step++ ;
-
-        free(Adir);
     }
 
     t2 = omp_get_wtime();
@@ -255,6 +253,7 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);
 
+    free(Adir);
     free(resid);
     free(dir);
 }
