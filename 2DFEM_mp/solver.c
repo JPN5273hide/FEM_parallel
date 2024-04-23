@@ -62,6 +62,9 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
     t1 = omp_get_wtime();
 
+    double* Adir;
+    Adir = (double*)malloc(sizeof(double)*dim); 
+
     while  (step <= dim){
         /*出力*/
         /*
@@ -70,12 +73,13 @@ int normal_CG(int dim, double *x, double **A, double *b){
         }
         */
 
-        double* Adir;
-        Adir = (double*)malloc(sizeof(double)*dim);
+       // スレッド数を2にするとか
+        #pragma omp parallel for 
         for (i=0; i<dim; i++){
             Adir[i] = 0;
+            #pragma omp parallel for
             for (j=0; j<dim; j++){
-                Adir[i] = Adir[i] + A[i][j]*dir[j];
+                Adir[i] = Adir[i] + A[i][j]*dir[j]; //2重ループにかける
             }
         }
 
@@ -121,24 +125,24 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
         /*ステップ数の更新*/
         step++ ;
-
-        free(Adir);
     }
 
     t2 = omp_get_wtime();
 
     int omp_max_threads = omp_get_max_threads();
 
-    printf("OMP THREADS: %d\n", omp_max_threads);
+    printf("solver: CG (not preconditioned)\n");
+    printf("using openMP\n");
     printf("CG time = %lf [sec.] \n",t2-t1);
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);
 
+    free(Adir);
     free(resid);
     free(dir);
 }
 
-int normal_CG(int dim, double *x, double **A, double *b){
+int diagscaled_CG(int dim, double *x, double **A, double *b){
     /*共役勾配法によりAx=b（次元：dim）を解き、解をxに格納する*/
     /*次元ステップだけ反復する（Aが正定値対称行列なら収束する）*/
     int i, j;
@@ -246,7 +250,8 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
     int omp_max_threads = omp_get_max_threads();
 
-    printf("OMP THREADS: %d\n", omp_max_threads);
+    printf("solver: CG (diagonal scaled)\n");
+    printf("using openMP\n");
     printf("CG time = %lf [sec.] \n",t2-t1);
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);

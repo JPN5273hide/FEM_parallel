@@ -129,7 +129,8 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
     int omp_max_threads = omp_get_max_threads();
 
-    printf("OMP THREADS: %d\n", omp_max_threads);
+    printf("solver: CG (not preconditionedcd)\n");
+    printf("using openMP\n");
     printf("CG time = %lf [sec.] \n",t2-t1);
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);
@@ -247,7 +248,8 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
 
     int omp_max_threads = omp_get_max_threads();
 
-    printf("OMP THREADS: %d\n", omp_max_threads);
+    printf("solver: CG (diagonal scaled)\n");
+    printf("using openMP\n");
     printf("CG time = %lf [sec.] \n",t2-t1);
     printf("Problem size = %d (matrix dimension)\n", dim);
     printf("time per size = %lf \n", (t2-t1)/dim);

@@ -199,11 +199,11 @@ int diagscaled_CG(int dim, double *x, double **A, double *b){
 
         /*近似解の更新*/
         rz = 0, pAp = 0;
-        #pragma omp parallel for reduction(+:pAp)
+        #pragma acc loop rediction(+:pAp)
         for (i=0; i<dim; i++){
             pAp = pAp +  dir[i]*Adir[i];
         }
-        #pragma omp parallel for reduction(+:rz)
+        #pragma acc loop reduction(+:rz)
         for (i=0; i<dim; i++){
             rz = rz + resid[i]*resid[i];
         }
