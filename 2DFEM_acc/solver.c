@@ -64,7 +64,7 @@ int normal_CG(int dim, double *x, double **A, double *b){
 
     double* Adir;
     Adir = (double*)malloc(sizeof(double)*dim);
-    #pragma acc data create(Adir[0:dim])
+    #pragma acc data create(Adir[0:dim]) //XXX
     {
     while  (step <= dim){
         /*出力*/
