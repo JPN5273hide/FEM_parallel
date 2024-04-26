@@ -17,5 +17,7 @@ int construct_matrix(double **A, double *f, int **cnn, double *node_coord_x, dou
 int Gauss_elimination(int dim, double *x, double **A, double *b);
 int normal_CG(int dim, double *x, double **A, double *b);
 int diagscaled_CG(int dim, double *x, double **A, double *b);
+int normal_CG_output(int dim, double *x, double **A, double *b);
+int diagscaled_CG_output(int dim, double *x, double **A, double *b);
 
 #endif // _MAIN_H_
